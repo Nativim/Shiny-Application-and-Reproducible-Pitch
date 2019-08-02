@@ -754,7 +754,7 @@ hljs.initHighlightingOnLoad();
 <div class="slideContent" >
 <p>author: Nati Munoz</p>
 
-<p>date: 28th July 2019
+<p>date:  2nd August 2019
 autosize: true</p>
 
 </div>
@@ -763,7 +763,7 @@ autosize: true</p>
 <section data-transition="linear" data-transition-speed="default">
 <h3>Overview</h3>
 <div class="slideContent" >
-<p>This presentation is based on a shiny application that get 2 numeric values as input and performs a simple calculation on the server.</p>
+<p>This presentation is based on a shiny application that get a date and a numeric value as input and performs a simple calculation on the server.</p>
 
 <p>The code for the user interface and server can be found in: 
 <a href="https://github.com/Nativim/Shiny-Application-and-Reproducible-Pitch">https://github.com/Nativim/Shiny-Application-and-Reproducible-Pitch</a></p>
@@ -774,11 +774,11 @@ autosize: true</p>
 <section data-transition="linear" data-transition-speed="default">
 <h3>Content of the Retirement Application</h3>
 <div class="slideContent" >
-<p>The application calculates the number of years to retirement given the current age and the retirement age.</p>
+<p>The application calculates the age and number of years to retirement given the date of birth and the retirement age.</p>
 
-<p>By default, the current age is populated as 50 and the retirement age as 65.</p>
+<p>By default, the date of birth is 1st Jan 2060 and the retirement age is 65.</p>
 
-<p>There is a minimun and a maximun number for both inputs</p>
+<p>The date of birth is input as a date format but the age calculated as an integer.</p>
 
 </div>
 
@@ -789,28 +789,34 @@ autosize: true</p>
 <p>The user needs to input the following:</p>
 
 <ul>
-<li>Current age, set as a numeric iput to be able to calculation</li>
-<li>Retirement age,set also as a numeric input to be able to do the calculation</li>
+<li>Date of birth, set as a date iput in a widget with a year view.</li>
+<li>Retirement age,set also as a numeric input to be able to do the substraction once the age is calculated in the server</li>
 </ul>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Function to calculate the number of years to retirement</h3>
+<h3>Function to calculate the age and number of years to retirement</h3>
 <div class="slideContent" >
-<p>The function &ldquo;Ret&rdquo; gets the retirement age and input age as numeric values from the user interface, calculate the difference and print the result in a text format so it can be displayed as a text output in the interface</p>
+<p>The function &ldquo;Age&rdquo; calculate the difference between today and the date of birth in years (divided by 365 days per year) and convert the result in an integer. 
+&ldquo;Ret&rdquo; gets the retirement age as numeric values from the user interface, calculate the difference between this value and the age.</p>
 
 <pre><code class="r">library(shiny)
 
-# Define server logic required to calcualte the substraction of 2 numbers
+# Define server logic required to calcualte the age and substraction of 2 numbers
 shinyServer(function(input, output) {
 
-    Ret &lt;- reactive({
-    ToRet &lt;- input$retAge - input$Age
-    print(ToRet)  
+    Age &lt;- reactive({
+        Age &lt;- as.integer((as.Date(Sys.Date())- as.Date(input$Dob))/365)
+        print(Age)
     })
 
+    Ret &lt;- reactive({
+    ToRet &lt;- input$retAge - as.integer((as.Date(Sys.Date())- as.Date(input$Dob))/365)
+    print(ToRet)  
+    })
+ output$Age &lt;- renderText(Age())   
  output$Ret &lt;- renderText(Ret()) 
 
     })

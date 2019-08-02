@@ -9,16 +9,19 @@
 
 library(shiny)
 
-# Define UI for application that draws a histogram
+# Define UI for application that calculates age and differnce between 2 numbers
 shinyUI(fluidPage(
     titlePanel("Current Details"),
     sidebarLayout(
         sidebarPanel(
-        numericInput("Age", "Current Age:",50,min = 20, max = 99),
+        dateInput ("Dob", "Date of Birth", "1960-01-01", startview = "year"),
         numericInput("retAge", "Retirement Age:", 65, min=55, max = 70)
             ),
     
         mainPanel(
+        h3 ("Age"),
+        textOutput ("Age"),
+        
         h3 ("Years left for Retirement"),
         textOutput("Ret")
             )
